@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { addUser } from "../utils/userSlice";
+import useCheckUserInfo from "../hooks/useCheckUserInfo";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userAvailable = useCheckUserInfo();
+
+  useEffect(() => {
+    if (userAvailable) {
+      navigate("/mynotez");
+    }
+  }, []);
+
   return (
-    <div className="">
-      <div className="w-full h-[100%] flex justify-center ">
+    <div className="h-[100%]">
+      <div className="w-full h-[100%] flex justify-center">
         <div className="w-full h-full fixed bg-gray-600 -z-10">
           <img
             className="w-full h-full object-cover"
@@ -20,12 +32,17 @@ const LandingPage = () => {
             <button
               className="w-40 bg-blue-800 py-2 px-6 m-2 rounded-lg font-semibold text-xs font-mono hover:shadow-white hover:bg-blue-900"
               onClick={() => {
-                navigate("/mynotez");
+                navigate("/login");
               }}
             >
               LOGIN
             </button>
-            <button className="w-40 text-blue-800 py-2 px-6 m-2 rounded-lg font-semibold text-xs font-mono bg-white   hover:bg-gray-200 ">
+            <button
+              className="w-40 text-blue-800 py-2 px-6 m-2 rounded-lg font-semibold text-xs font-mono bg-white   hover:bg-gray-200"
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
               SIGNUP
             </button>
           </div>

@@ -5,7 +5,7 @@ const NoteCard = ({ note }) => {
   const [accOpen, setAccOpen] = useState(false);
   const today = new Date();
   return (
-    <div className="ms-10 w-[80%] my-1 shadow-md rounded-md">
+    <div className="my-1 shadow-md rounded-md">
       <div
         className="bg-gray-200  flex items-center py-2 px-4  justify-between rounded-t-md cursor-pointer"
         onClick={() => {
