@@ -14,13 +14,16 @@ import Header from "./components/Header";
 import SignInPage from "./components/SignInPage";
 import LoginInPage from "./components/LoginInPage";
 import { SnackbarProvider } from "notistack";
+import CreateNote from "./components/CreateNote";
+import UpdateNote from "./components/UpdateNote";
 
 function App() {
+  const [search,setSearch] = useState("")
   return (
     <BrowserRouter>
       {/* <RouterProvider router={appRouter} /> */}
-      <Header />
-      <SnackbarProvider>
+      <Header setSearch={setSearch}/>
+      <SnackbarProvider autoHideDuration={3000}>
         <main className="">
           <Routes>
             <Route path="/" Component={LandingPage} />
@@ -28,7 +31,10 @@ function App() {
             <Route path="/register" Component={SignInPage} />
 
             <Route path="/login" Component={LoginInPage} />
-            <Route path="/mynotez" Component={Body} />
+            <Route path="/mynotez" Component={()=><Body search={search}/>} />
+            <Route path="/note/:id" Component={UpdateNote} />
+            <Route path="/createnote" Component={CreateNote} />
+
           </Routes>
         </main>
       </SnackbarProvider>

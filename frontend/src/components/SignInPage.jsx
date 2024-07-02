@@ -5,7 +5,6 @@ import { useSnackbar } from "notistack";
 import Loader from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, setLoading } from "../utils/userSlice";
-import useCheckUserInfo from "../hooks/useCheckUserInfo";
 
 const SignInPage = () => {
   const [name, setName] = useState("");
@@ -21,6 +20,10 @@ const SignInPage = () => {
 
   const { userInfo, loading } = useSelector((store) => store.user);
 
+  const setUser = (user) => {
+    dispatch(addUser(user));
+  };
+
   const showMessage = (message, state) => {
     closeSnackbar();
     enqueueSnackbar(message, {
@@ -32,13 +35,14 @@ const SignInPage = () => {
     });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       showMessage("Passwords Do Not Match !", "error");
     } else {
       try {
-        const userDetails = { name, email, password, picMessage };
+        const userDetails = { name, email, password,picMessage };
         dispatch(setLoading(true));
         const data = await fetch("http://localhost:5000/api/users/register", {
           method: "POST",
@@ -50,6 +54,7 @@ const SignInPage = () => {
         const json = await data.json();
         if (json?.data) {
           localStorage.setItem("userInfo", JSON.stringify(json?.data)); //saving user info in local storage
+          setUser(json?.data);
           navigate("/mynotez");
         }
         showMessage(json?.result, json?.status);

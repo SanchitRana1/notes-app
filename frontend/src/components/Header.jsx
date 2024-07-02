@@ -1,28 +1,22 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useCheckUserInfo from "../hooks/useCheckUserInfo";
-import { useDispatch } from "react-redux";
-import { addUser, removeUser } from "../utils/userSlice";
-const Header = () => {
+import { useDispatch, useSelector } from "react-redux";
+import { removeUser } from "../utils/userSlice";
+import { clearNotes } from "../utils/noteSlice";
+const Header = ({setSearch}) => {
   const navigate = useNavigate();
   const userAvailable = useCheckUserInfo();
   const dispatch = useDispatch();
-  const userInfo = localStorage.getItem("userInfo");
 
-  const setUser = () => {
-    dispatch(addUser(JSON.parse(userInfo)));
-  };
+  const {userInfo} = useSelector(store => store?.user) 
 
   const onLogout = () => {
     localStorage.removeItem("userInfo");
     dispatch(removeUser());
+    dispatch(clearNotes());
     navigate("/");
   };
-  useEffect(() => {
-    if (userAvailable) {
-      setUser();
-    }
-  }, [userInfo]);
 
   return (
     <div className="w-full fixed bg-gradient-to-r from-violet-500 to-fuchsia-500">
@@ -34,14 +28,18 @@ const Header = () => {
           <input
             className="rounded-lg outline-none shadow-lg py-1 px-2"
             type="text"
+            onChange={(e)=>{setSearch(e.target.value)}}
           />
         </div>
         {userAvailable ? (
-          <div className="end text-white">
+          <div className="flex end text-white justify-center items-center">
             <Link className="cursor-pointer px-2" to={"/mynotez"}>
               {" "}
               My notes
             </Link>
+            <div className="w-8 mx-2">
+            <img src={userInfo?.pic} alt="" />
+            </div>
             <button
               className="cursor-pointer px-2 ms-2 hover:bg-white hover:text-purple-600 rounded-md"
               onClick={onLogout}

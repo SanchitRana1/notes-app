@@ -2,38 +2,35 @@ import React, { useEffect, useState } from "react";
 import MainContainer from "./MainContainer";
 import { Link, useNavigate } from "react-router-dom";
 import NoteCard from "./NoteCard";
-import { useSelector } from "react-redux";
-// import { notes } from "../../../backend/data/notes";
-
-const Body = () => {
-  const [myNotes, setMyNotes] = useState([]);
+import { useDispatch, useSelector } from "react-redux";
+import { fetchNotes } from "../utils/noteSlice";
+import NoteContainer from "./NoteContainer";
+import Loader from "./Loader";
+const Body = ({search}) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { userInfo } = useSelector((store) => store.user); //get user info from store
 
-  const getMyNotes = async () => {
-    const data = await fetch("http://localhost:5000/api/notes");
-    const json = await data.json();
-    setMyNotes(json);
-  };
-
+  const [loading, setLoading] = useState(false)
   const checkUserInfo = () => {
     const userInfo = localStorage.getItem("userInfo");
     return userInfo ? true : false;
   };
-
   useEffect(() => {
     if (checkUserInfo()) {
-      getMyNotes();
+      setLoading(true);
+      dispatch(fetchNotes());
+      setLoading(false);
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col mb-20">
-      <MainContainer title={"Welcome Back " + userInfo?.data.name}>
+      <MainContainer title={"Welcome Back " + userInfo?.name}>
         <div className="">
-          {/* <Link className="ms-10 min-w-fit" to={"/createnote"}> */}
           <button
             className=" bg-blue-800 py-2 px-6 m-2 rounded-lg font-semibold text-xs font-mono hover:shadow-white hover:bg-blue-900 text-white"
             onClick={() => {
@@ -42,11 +39,10 @@ const Body = () => {
           >
             CREATE NEW NOTE
           </button>
-          {/* </Link> */}
         </div>
-        {myNotes.map((n) => (
-          <NoteCard key={n._id} note={n} />
-        ))}
+        
+      {loading && <Loader />}
+        <NoteContainer search={search}/>
       </MainContainer>
     </div>
   );

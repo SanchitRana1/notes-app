@@ -1,12 +1,10 @@
 const asyncHandler = require("express-async-handler");
-const express = require("express");
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
 
 const registerUser = async (req, res) => {
-  const { name, email, password, pic } = req.body;
-
+  const { name, email, password, picMessage } = req.body;
   const userExists = await User.findOne({ email: email });
 
   if (userExists) {
@@ -19,7 +17,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashPassword,
-      pic,
+      pic:picMessage,
     });
     if (user) {
       res.status(201).json({
@@ -28,6 +26,8 @@ const registerUser = async (req, res) => {
           name: user.name,
           isAdmin: user.isAdmin,
           email: user.email,
+          pic: user.pic,
+          token: generateToken(user._id),
         },
         status: "success",
         result: "User created successfully",
@@ -43,9 +43,8 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log("email :" + email);
   const user = await User.findOne({ email: email });
-  console.log(user);
+  // console.log(user);
   const hashpass = user?.password;
 
   if (user) {
@@ -57,7 +56,7 @@ const loginUser = async (req, res) => {
       if (result) {
         // Passwords match, authentication successful
         res.status(201).json({
-          result: "Passwords match! User authenticated.",
+          result: "Welcome back " + user.name,
           status: "success",
           data: {
             id: user._id,

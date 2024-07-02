@@ -5,7 +5,6 @@ import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { addUser, setLoading } from "../utils/userSlice";
-import useCheckUserInfo from "../hooks/useCheckUserInfo";
 
 const LoginInPage = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +14,11 @@ const LoginInPage = () => {
   const dispatch = useDispatch();
 
   const { userInfo, loading } = useSelector((store) => store.user);
+
+  //   setting user info
+  const setUser = async (user) => {
+    dispatch(addUser(user));
+  };
 
   const showMessage = (message, state) => {
     closeSnackbar();
@@ -26,6 +30,8 @@ const LoginInPage = () => {
       },
     });
   };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     closeSnackbar();
@@ -42,10 +48,12 @@ const LoginInPage = () => {
       const json = await data.json();
       if (json?.data) {
         localStorage.setItem("userInfo", JSON.stringify(json?.data)); //saving user info in local storage
+        await setUser(json?.data); //set Data to store
+
         navigate("/mynotez");
+        // await fetchNotes(json?.data?.token);
       }
       showMessage(json?.result, json?.status);
-
       dispatch(setLoading(false));
     } catch (error) {
       console.log(error);

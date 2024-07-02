@@ -6,7 +6,6 @@ import useCheckUserInfo from "../hooks/useCheckUserInfo";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const userAvailable = useCheckUserInfo();
 
   useEffect(() => {

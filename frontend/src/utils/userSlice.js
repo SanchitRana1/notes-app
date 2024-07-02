@@ -4,7 +4,7 @@ import React from "react";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    userInfo: null,
+    userInfo: JSON.parse(localStorage.getItem("userInfo")),
     loading: false,
   },
   reducers: {
