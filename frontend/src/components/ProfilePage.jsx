@@ -1,29 +1,25 @@
 import React, { useEffect, useState } from "react";
 import MainContainer from "./MainContainer";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useSnackbar } from "notistack";
 import Loader from "./Loader";
+import { useSnackbar } from "notistack";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser, setLoading } from "../utils/userSlice";
+import { updateUser } from "../utils/userSlice";
 import { CLOUD_UPLOAD_URL, USER_URL } from "../utils/constants";
 
-const SignInPage = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+const ProfilePage = () => {
+  const { userInfo } = useSelector((store) => store.user);
+  const [name, setName] = useState(userInfo?.name);
+  const [email, setEmail] = useState(userInfo?.email);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [picMessage, setPicMessage] = useState(
-    "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
-  );
+  const [picMessage, setPicMessage] = useState(userInfo?.pic);
+  const [loading, setLoading] = useState(false);
+  const token = userInfo ? userInfo.token : "";
+
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { userInfo, loading } = useSelector((store) => store.user);
-
-  const setUser = (user) => {
-    dispatch(addUser(user));
-  };
 
   const showMessage = (message, state) => {
     closeSnackbar();
@@ -34,36 +30,6 @@ const SignInPage = () => {
         horizontal: "center",
       },
     });
-  };
-
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      showMessage("Passwords Do Not Match !", "error");
-    } else {
-      try {
-        const userDetails = { name, email, password,picMessage };
-        dispatch(setLoading(true));
-        const data = await fetch(USER_URL+"register", {
-          method: "POST",
-          headers: {
-            "content-Type": "application/json",
-          },
-          body: JSON.stringify(userDetails),
-        });
-        const json = await data.json();
-        if (json?.data) {
-          localStorage.setItem("userInfo", JSON.stringify(json?.data)); //saving user info in local storage
-          setUser(json?.data);
-          navigate("/mynotez");
-        }
-        showMessage(json?.result, json?.status);
-        dispatch(setLoading(false));
-      } catch (error) {
-        console.log(error);
-      }
-    }
   };
 
   const postDetails = async (pics) => {
@@ -84,26 +50,61 @@ const SignInPage = () => {
         }
       );
       const json = await resp.json();
-      console.log(json);
       setPicMessage(json?.url);
     } else {
       showMessage("Please Select an Image", "error");
     }
   };
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      showMessage("Passwords Do Not Match !", "error");
+    } else {
+      try {
+        setLoading(true);
+        const user = { name, email, password, pic: picMessage };
+        const response = await fetch(
+          USER_URL+"profile/",
+          {
+            method: "POST",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify(user),
+          }
+        );
+        const json = await response.json();
+        const { data, result, status } = json;
+        if (data) {
+          localStorage.setItem("userInfo", JSON.stringify(data));
+          dispatch(updateUser(data));
+        }
+        showMessage(result, status);
+        setLoading(false);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  };
 
   useEffect(() => {
-    if (userInfo) {
-      navigate("/mynotez");
+    if (!userInfo) {
+      navigate("/");
     }
   }, []);
 
   return (
     <div className="">
       {/* <MainContainer title={title} /> */}
-      <MainContainer title={"Register"}>
+      <MainContainer title={"Edit Profile"}>
         {loading && <Loader />}
 
-        <form action="" className="flex flex-col" onSubmit={handleSubmit}>
+        <form
+          action=""
+          className="flex flex-col"
+          onSubmit={handleUpdateProfile}
+        >
           <div className="flex flex-col p-2">
             <h1 className="pt-4">Name</h1>
             <input
@@ -132,6 +133,7 @@ const SignInPage = () => {
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
+              placeholder="Password"
             />
             <h1 className="pt-4">Confirm Password</h1>
             <input
@@ -141,9 +143,11 @@ const SignInPage = () => {
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
               }}
+              placeholder="Confirm Password"
             />
             <h1 className="pt-4">Profile Picture</h1>
             <div className="flex">
+              <img className="w-10 rounded-full" src={picMessage} alt="" />
               <input
                 type="file"
                 className=" border-gray-400 outline-none px-2 rounded-md"
@@ -153,20 +157,13 @@ const SignInPage = () => {
               />
             </div>
           </div>
-          <button className="w-24 bg-blue-500 py-1 m-2 rounded-md mt-4 text-white shadow-lg hover:bg-blue-700">
-            Register
+          <button className="w-24 bg-green-600 py-1 m-2 rounded-md mt-4 text-white shadow-lg hover:bg-green-700">
+            Update
           </button>
-          <h2 className="m-2 ">
-            Already a User ?
-            <Link to={"/login"} className="px-2 py-1 font-bold">
-              {" "}
-              Login
-            </Link>
-          </h2>
         </form>
       </MainContainer>
     </div>
   );
 };
 
-export default SignInPage;
+export default ProfilePage;

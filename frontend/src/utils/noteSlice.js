@@ -1,14 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { setLoading } from "./userSlice";
+import { NOTES_URL } from "./constants";
 
 //fetcing notes information
 export const fetchNotes = createAsyncThunk("note/fetchNotes", async () => {
     const userInfo = JSON.parse(localStorage?.getItem("userInfo"));
     const token = userInfo ? userInfo.token : "";
 
-  const noteList = await fetch("http://localhost:5000/api/notes", {
+  const noteList = await fetch(NOTES_URL, {
     method: "GET",
     headers: {
       "content-Type": "application/json",

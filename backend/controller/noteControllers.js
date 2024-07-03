@@ -66,14 +66,13 @@ const updateNoteById = expressAsyncHandler(async (req, res) => {
 
 const deleteNoteById = expressAsyncHandler(async (req, res) => {
   const note = await Note.findById(req.params.id);
-
   if (note.user.toString() !== req.user._id.toString()) {
     res
       .status(401)
       .json({ result: "You can't perform this action !", status: "error" });
   }
   if (note) {
-     await note.deleteOne();
+    await note.deleteOne();
     res.status(201).json({
       result: "Note deleted successfully",
       status: "success",

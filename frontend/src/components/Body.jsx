@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MainContainer from "./MainContainer";
-import { Link, useNavigate } from "react-router-dom";
-import NoteCard from "./NoteCard";
+import {useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNotes } from "../utils/noteSlice";
 import NoteContainer from "./NoteContainer";

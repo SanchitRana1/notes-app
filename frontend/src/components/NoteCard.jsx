@@ -5,10 +5,10 @@ import remarkBreaks from "remark-breaks";
 import { deleteNote } from "../utils/noteSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
+import { NOTES_URL } from "../utils/constants";
 
 const NoteCard = ({ note }) => {
   const newDate = new Date(note?.createdAt.substring(0, 10));
-  // newDate.toUTCString().substring(0,16)
   const [accOpen, setAccOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const NoteCard = ({ note }) => {
 
       const token = userInfo ? userInfo.token : "";
       const response = await fetch(
-        "http://localhost:5000/api/notes/" + note?._id,
+        NOTES_URL + note?._id,
         {
           method: "DELETE",
           headers: {

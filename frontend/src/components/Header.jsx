@@ -1,21 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useCheckUserInfo from "../hooks/useCheckUserInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../utils/userSlice";
 import { clearNotes } from "../utils/noteSlice";
-const Header = ({setSearch}) => {
+const Header = ({ setSearch }) => {
   const navigate = useNavigate();
-  const userAvailable = useCheckUserInfo();
   const dispatch = useDispatch();
+  const userAvailable = useCheckUserInfo();
+  const [showProfileOp, setShowProfileOp] = useState(false);
 
-  const {userInfo} = useSelector(store => store?.user) 
+  const { userInfo } = useSelector((store) => store?.user);
 
   const onLogout = () => {
     localStorage.removeItem("userInfo");
     dispatch(removeUser());
     dispatch(clearNotes());
     navigate("/");
+  };
+
+  const toggleProfile = () => {
+    setShowProfileOp(!showProfileOp);
   };
 
   return (
@@ -28,7 +33,9 @@ const Header = ({setSearch}) => {
           <input
             className="rounded-lg outline-none shadow-lg py-1 px-2"
             type="text"
-            onChange={(e)=>{setSearch(e.target.value)}}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
           />
         </div>
         {userAvailable ? (
@@ -37,15 +44,34 @@ const Header = ({setSearch}) => {
               {" "}
               My notes
             </Link>
-            <div className="w-8 mx-2">
-            <img src={userInfo?.pic} alt="" />
+            <div className="mx-2">
+              <div className="flex items-center px-2 py-1 cursor-pointer" 
+                  onClick={toggleProfile}
+                  tabIndex="0"
+                  >
+                <img
+                  className="rounded-full w-8"
+                  src={userInfo?.pic}
+                  alt=""
+                />
+                <div className="p-2">{userInfo?.name}</div>
+              </div>
+              {showProfileOp && (
+                <div className="flex flex-col text-center ms-2 rounded-b-md absolute bg-white text-fuchsia-500 shadow-lg">
+                  <Link to={"/profile"} onClick={()=>{setShowProfileOp(false)}} className="px-4 py-1 hover:bg-fuchsia-500 hover:text-white">
+                    My Profile
+                  </Link>
+                  <button
+                    className="px-4 py-1 hover:bg-fuchsia-500 hover:text-white"
+                    onClick={()=>{
+                      onLogout()
+                      setShowProfileOp(false)}}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
-            <button
-              className="cursor-pointer px-2 ms-2 hover:bg-white hover:text-purple-600 rounded-md"
-              onClick={onLogout}
-            >
-              Logout
-            </button>
           </div>
         ) : (
           <div className="end text-white">

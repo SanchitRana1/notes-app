@@ -5,8 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
-import { updateNote } from '../utils/noteSlice';
+import { deleteNote, updateNote } from '../utils/noteSlice';
 import Loader from './Loader';
+import { NOTES_URL } from '../utils/constants';
 
 const UpdateNote = () => {
     const [title, setTitle] = useState("");
@@ -51,10 +52,11 @@ const UpdateNote = () => {
       setLoading(false)
     };
 
-    const updateNoteInfo = async () => {
+    const updateNoteInfo = async (e) => {
+        e.preventDefault()
         setLoading(true)
       const note = { title, content, category };
-      const response = await fetch("http://localhost:5000/api/notes/" + id, {
+      const response = await fetch(NOTES_URL + id, {
         method: "PUT",
         headers: {
           "content-Type": "application/json",
@@ -72,11 +74,28 @@ const UpdateNote = () => {
       setLoading(false)
     };
 
-    const onNoteSubmit=(e)=>{
+    const onDeleteNote = async (e) => {
         e.preventDefault()
-        updateNoteInfo();
-    }
-    const onDeleteNote=()=>{}
+        if(window.confirm("Are your sure you want to delete this note ?")){
+          const response = await fetch(
+            NOTES_URL + id,
+            {
+              method: "DELETE",
+              headers: {
+                "content-Type": "application/json",
+                Authorization: "Bearer " + token,
+              },
+            }
+          );
+          const json = await response.json();
+          const { data, result, status } = json;
+          if (data) {
+            dispatch(deleteNote(data));
+            navigate("/mynotez");
+          }
+          showMessage(result, status);
+        }
+      };
 
     useEffect(() => {
         getNoteInfo();
@@ -90,7 +109,6 @@ const UpdateNote = () => {
           <form
             className="p-2 m-2 bg-gray-10 shadow-lg"
             action=""
-            onSubmit={onNoteSubmit}
           >
             <h1 className="font-semibold text-xl font-mono">Title</h1>
             <input
@@ -142,6 +160,7 @@ const UpdateNote = () => {
               <button
                 className="py-1 px-2 m-1 bg-green-600 rounded-md"
                 type="submit"
+                onClick={updateNoteInfo}
               >
                 UPDATE NOTE
               </button>

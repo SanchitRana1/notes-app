@@ -4,9 +4,7 @@ import Body from "./components/Body";
 import {
   BrowserRouter,
   Route,
-  RouterProvider,
   Routes,
-  createBrowserRouter,
 } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 import Footer from "./components/Footer";
@@ -16,12 +14,12 @@ import LoginInPage from "./components/LoginInPage";
 import { SnackbarProvider } from "notistack";
 import CreateNote from "./components/CreateNote";
 import UpdateNote from "./components/UpdateNote";
+import ProfilePage from "./components/ProfilePage";
 
 function App() {
   const [search,setSearch] = useState("")
   return (
     <BrowserRouter>
-      {/* <RouterProvider router={appRouter} /> */}
       <Header setSearch={setSearch}/>
       <SnackbarProvider autoHideDuration={3000}>
         <main className="">
@@ -34,6 +32,7 @@ function App() {
             <Route path="/mynotez" Component={()=><Body search={search}/>} />
             <Route path="/note/:id" Component={UpdateNote} />
             <Route path="/createnote" Component={CreateNote} />
+            <Route path="/profile" Component={ProfilePage} />
 
           </Routes>
         </main>

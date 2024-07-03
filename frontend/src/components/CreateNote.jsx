@@ -6,6 +6,7 @@ import remarkBreaks from 'remark-breaks';
 import { createNote } from '../utils/noteSlice';
 import {useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import { NOTES_URL } from '../utils/constants';
 
 const CreateNote = () => {
     const [title, setTitle] = useState("");
@@ -30,7 +31,7 @@ const CreateNote = () => {
       e.preventDefault();
       const note = {title,content,category}
       const token = userInfo ? userInfo.token : "";
-      const response = await fetch("http://localhost:5000/api/notes/create", {
+      const response = await fetch(NOTES_URL+"create", {
         method: "POST",
         headers: {
           "content-Type": "application/json",

@@ -5,6 +5,7 @@ import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { addUser, setLoading } from "../utils/userSlice";
+import { USER_URL } from "../utils/constants";
 
 const LoginInPage = () => {
   const [email, setEmail] = useState("");
@@ -38,7 +39,7 @@ const LoginInPage = () => {
     try {
       const userDetails = { email, password };
       dispatch(setLoading(true));
-      const data = await fetch("http://localhost:5000/api/users/login", {
+      const data = await fetch(USER_URL+"login", {
         method: "POST",
         headers: {
           "content-Type": "application/json",

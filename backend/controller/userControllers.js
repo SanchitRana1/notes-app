@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
+const expressAsyncHandler = require("express-async-handler");
 
 const registerUser = async (req, res) => {
   const { name, email, password, picMessage } = req.body;
@@ -17,7 +18,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashPassword,
-      pic:picMessage,
+      pic: picMessage,
     });
     if (user) {
       res.status(201).json({
@@ -76,7 +77,39 @@ const loginUser = async (req, res) => {
       }
     });
   } else {
-    res.status(400).json({ result: "User does not exists !" });
+    res.status(400).json({ result: "User does not exists !", status: "error" });
   }
 };
-module.exports = { registerUser, loginUser };
+
+const updateUserProfile = expressAsyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  const { name, email, pic, password } = req.body;
+
+  const salt = await bcrypt.genSalt(10);
+  const hashPassword = password ? await bcrypt.hash(password, salt) : password;
+
+  if (user) {
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.pic = pic || user.pic;
+    user.password = password ? hashPassword : user.password;
+
+    const updatedUser = await user.save();
+    res.status(201).json({
+      result: "User info updated",
+      status: "success",
+      data: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        isAdmin: user.isAdmin,
+        email: updatedUser.email,
+        pic: updatedUser.pic,
+        token: generateToken(updatedUser._id),
+      },
+    });
+  } else {
+    res.status(404).json({ result: "User does not exists !", status: "error" });
+  }
+});
+module.exports = { registerUser, loginUser, updateUserProfile };

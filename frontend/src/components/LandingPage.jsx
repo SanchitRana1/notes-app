@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addUser } from "../utils/userSlice";
 import useCheckUserInfo from "../hooks/useCheckUserInfo";
+import { BG_HOME } from "../utils/constants";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ const LandingPage = () => {
         <div className="w-full h-full fixed bg-gray-600 -z-10">
           <img
             className="w-full h-full object-cover"
-            src="https://images.pexels.com/photos/1629212/pexels-photo-1629212.jpeg?auto=compress&cs=tinysrgb&w=7680&h=4320&dpr=1"
+            src={BG_HOME}
             alt=""
           />
         </div>
