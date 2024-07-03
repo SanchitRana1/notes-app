@@ -26,6 +26,10 @@ const NoteCard = ({ note }) => {
     });
   };
 
+  const onEditNote=()=>{
+    navigate("/note/" + note?._id);
+  }
+
   const onDeleteNote = async () => {
     if(window.confirm("Are your sure you want to delete this note ?")){
 
@@ -52,18 +56,16 @@ const NoteCard = ({ note }) => {
   return (
     <div className="my-1 shadow-md rounded-md">
       <div
-        className="bg-gray-200  flex items-center py-2 px-4  justify-between rounded-t-md cursor-pointer"
+        className="bg-gray-200  flex items-center py-2 px-4 justify-between rounded-t-md cursor-pointer"
         onClick={() => {
           setAccOpen(!accOpen);
         }}
       >
         <div className=" rounded-md font-bold">{note?.title}</div>
         <div className="flex">
-          <Link to={"/note/" + note?._id}>
-            <button className="bg-blue-800 font-semibold text-xs font-mono hover:bg-blue-900 text-white px-2 py-1 rounded-md mx-1">
+            <button className="bg-blue-800 font-semibold text-xs font-mono hover:bg-blue-900 text-white px-2 py-1 rounded-md mx-1" onClick={onEditNote}>
               EDIT
             </button>
-          </Link>
           <button
             className="bg-red-700 font-semibold text-xs font-mono hover:bg-red-900 text-white px-2 py-1 rounded-md mx-1"
             onClick={onDeleteNote}
@@ -77,7 +79,6 @@ const NoteCard = ({ note }) => {
           <span className="bg-green-600 text-white text-xs font-semibold p-1 rounded-md">
             Category - {note?.category}
           </span>
-          {/* <p className="rounded-full mt-2"> {note?.content}</p> */}
           <p className="rounded-full mt-2">
             <Markdown
               className="w-full px-2 mb-2 text-sm prose lg:prose-xl"
