@@ -8,7 +8,7 @@
     "start": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm start\" \"npm run client\"",
-    "build": "npm install && cd frontend && npm install && vite build"
+    "build":"npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Sanchit Rana",
   "license": "ISC",
@@ -23,7 +23,6 @@
     "firebase": "^10.12.3",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.7.0",
-    "mongoose": "^8.4.3",
-    "vite": "^5.3.3"
+    "mongoose": "^8.4.3"
   }
 }
