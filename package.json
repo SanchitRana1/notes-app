@@ -8,8 +8,8 @@
     "start": "node backend/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm start\" \"npm run client\"",
-    "build": "npm install && npm install --prefix frontend && npm run build:frontend",
-    "build:frontend": "cd frontend && npm install && npx vite build"
+    "build": "npm install && cd frontend && npm install && npm run build:frontend",
+    "build:frontend": "vite build"
   },
   "author": "Sanchit Rana",
   "license": "ISC",
