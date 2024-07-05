@@ -34,7 +34,7 @@ const UpdateNote = () => {
 
     const getNoteInfo = async () => {
         setLoading(true)
-      const response = await fetch("http://localhost:5000/api/notes/"+id, {
+      const response = await fetch(NOTES_URL+id, {
         method: "GET",
         headers: {
           "content-Type": "application/json",

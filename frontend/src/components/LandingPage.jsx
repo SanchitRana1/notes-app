@@ -6,7 +6,6 @@ import { BG_HOME } from "../utils/constants";
 const LandingPage = () => {
   const navigate = useNavigate();
   const userAvailable = useCheckUserInfo();
-  console.log(import.meta.env.VITE_NODE_ENV)
 
   useEffect(() => {
     if (userAvailable) {
