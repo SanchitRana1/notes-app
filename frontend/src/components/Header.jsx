@@ -24,12 +24,12 @@ const Header = ({ setSearch }) => {
   };
 
   return (
-    <div className="w-full fixed bg-gradient-to-r from-violet-500 to-fuchsia-500">
-      <div className="w-[100%] md:w-[80%] mx-auto flex p-2 justify-between items-center">
-        <div className="text-4xl font-bold text-white cursor-pointer ">
+    <div className="w-full text-center fixed bg-gradient-to-r from-violet-500 to-fuchsia-500">
+      <div className="w-[100%] md:w-[80%] mx-auto flex p-2 justify-evenly md:justify-between items-center">
+        <Link to={"/mynotez"} className="text-4xl font-bold text-white cursor-pointer ">
           Notez
-        </div>
-        <div className="middle">
+        </Link>
+        <div className="hidden lg:block md:block">
           <input
             className="rounded-lg outline-none shadow-lg py-1 px-2"
             type="text"
@@ -40,21 +40,18 @@ const Header = ({ setSearch }) => {
         </div>
         {userAvailable ? (
           <div className="flex end text-white justify-center items-center">
-            <Link className="cursor-pointer px-2" to={"/mynotez"}>
-              {" "}
-              My notes
-            </Link>
+            
             <div className="mx-2">
               <div className="flex items-center px-2 py-1 cursor-pointer" 
                   onClick={toggleProfile}
                   tabIndex="0"
                   >
                 <img
-                  className="rounded-full w-8"
+                  className="rounded-full w-9"
                   src={userInfo?.pic}
                   alt=""
                 />
-                <div className="p-2">{userInfo?.name}</div>
+                <div className="ms-2">{userInfo?.name}</div>
               </div>
               {showProfileOp && (
                 <div className="flex flex-col text-center ms-2 rounded-b-md absolute bg-white text-fuchsia-500 shadow-lg">

@@ -2,9 +2,9 @@ import React from "react";
 
 const MainContainer = ({ title, children }) => {
   return (
-    <div className="flex flex-col sm:w-[90%] md:w-[50%] h-[50%] py-20 ms-10 justify-center ">
+    <div className="md:w-[50%] h-[50%] py-20 mx-2">
       {title && (
-        <div className="">
+        <div className="flex flex-col">
           <h1 className="p-2 text-3xl md:text-5xl font-mono">
             {title.toUpperCase()}
           </h1>
