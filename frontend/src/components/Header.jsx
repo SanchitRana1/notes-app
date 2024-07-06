@@ -25,7 +25,7 @@ const Header = ({ setSearch }) => {
 
   return (
     <div className="w-full text-center fixed bg-gradient-to-r from-violet-500 to-fuchsia-500">
-      <div className="w-[100%] md:w-[80%] mx-auto flex p-2 justify-evenly md:justify-between items-center">
+      <div className="w-[90%] md:w-[70%] mx-auto flex p-2 justify-evenly md:justify-between items-center">
         <Link to={"/mynotez"} className="text-4xl font-bold text-white cursor-pointer ">
           Notez
         </Link>

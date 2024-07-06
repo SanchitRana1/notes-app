@@ -23,10 +23,10 @@ const LandingPage = () => {
             alt=""
           />
         </div>
-        <div className="w-[100%] md:w-[80%] bg-black bg-opacity-50 text-white flex flex-col items-center my-52">
-          <h1 className="text-5xl md:text-7xl">Welcome to Notez</h1>
+        <div className="w-[100%] bg-black bg-opacity-50 text-white flex flex-col items-center justify-center my-52">
+          <h1 className="text-4xl md:text-7xl">Welcome to Notez</h1>
           <p>One safe place for all your notes</p>
-          <div className="p-4">
+          <div className="p-4 flex">
             <button
               className="w-40 bg-blue-800 py-2 px-6 m-2 rounded-lg font-semibold text-xs font-mono hover:shadow-white hover:bg-blue-900"
               onClick={() => {
